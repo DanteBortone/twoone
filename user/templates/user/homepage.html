@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block body_block %}
+
+<font class="page_header">Homepage</font>
+
+{% if user.is_authenticated == False %}
+    <p style="padding-left:10px"> Welcome Guest!</p>
+    <p style="padding-left:10px"> You may view public claims as a guest but may not vote or participate in the discussion.</p>
+    <p style="padding-left:10px"><a href="{% url 'login' %}">Login</a></p>
+    <p style="padding-left:10px"><a href="{% url 'logout' %}">Register</a></p>
+
+{% else %}
+    <p style="padding-left:10px"> Welcome {{ user.username }}.</p>
+{% endif %}
+
+<!--
+ - see what's new - list recent arguments
+ - search for arguments - search for args
+ - user would have updates on claims they are following
+ -->
+<br/>
+<h4 style="padding-left:10px">Some recent claims:</h4>
+{% if latest_claim_list %}
+<ul>
+    {% for claim in latest_claim_list %}
+    <li><a href="/engage/{{ claim.id }}/">{{ claim.title }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No claims are available.</p>
+{% endif %}
+
+
+<script>
+    function bodyOnLoad(){
+        //stump
+    }
+
+</script>
+
+    
+    
+{% endblock %}
+
+

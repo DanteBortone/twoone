@@ -1,0 +1,72 @@
+{% load i18n pybb_tags staticfiles %}
+
+{% pybb_get_profile user=claimlink.user as claimlink_user_profile %}
+
+<table class="table table-bordered claimlink" id="claimlink-{{ claimlink.id }}">
+    <thead class="claimlink-header">
+    <tr>
+    <th colspan="2">
+        <span class="updated">New {{ claimlink.link_type.title }} - {% pybb_time claimlink.created %}</span>
+    </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="claimlink-row">
+        <td class="claimlink-info">
+            <div class="claimlink-topic">Claim:
+                <a href="/engage/{{ claimlink.primary_claim.id }}/">
+                    <span class="claimlink-topic">{{ claimlink.primary_claim.title }}</span>
+                </a>
+                {% if user.is_authenticated %}
+                    {% if user in claimlink.primary_claim.forum.subscribers.all %}
+                        <a class="toggle_forum_subscribe" id="subscribe_btn" onclick="subscribe_forum('{{my_url}}', {{ claimlink.primary_claim.forum.id }}, false);">Unsubscribe</a>
+                    {% else %}
+                        <a class="toggle_forum_subscribe" id="subscribe_btn" onclick="subscribe_forum('{{my_url}}', {{ claimlink.primary_claim.forum.id }}, true);">Subscribe</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            
+            <div class="claimlink-summary">{{ claimlink.link_type.title | capfirst }}:
+                <a href="/engage/{{ claimlink.linked_claim.id }}/">
+                    <span class="claimlink-summary">{{ claimlink.linked_claim.title }}</span>
+                </a>
+            </div>
+            
+            <div class="claimlink-posts">Posts:
+                {% if claimlink.topic.post_count > 0 %}
+                    <a href="/forum/topic/{{ claimlink.topic.id }}/">
+                        <span class="claimlink-posts">{{ claimlink.topic.post_count }}</span>
+                    </a>
+                {% else %}
+                    <a href="/forum/topic/{{ claimlink.topic.id }}/post/add/">
+                        <span class="claimlink-posts">0</span>
+                    </a>
+                {% endif %}
+            </div>
+            
+            
+            <div class="claimlink-author">User:
+                <a href="{{ claimlink_user_profile.get_absolute_url }}">
+                    <span class="claimlink-username">{{ claimlink_user_profile.get_display_name }}</span>
+                </a>
+            </div>
+            
+            
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    function subscribe_forum(my_url, forum_id, subscribe){
+        console.log("my_url:", my_url)
+        $.post(my_url,{
+               csrfmiddlewaretoken: '{{ csrf_token }}',
+               post_action: "forum_subscription",
+               forum_id: forum_id,
+               subscribe: subscribe,
+               });
+        location.reload();
+    }
+
+</script>

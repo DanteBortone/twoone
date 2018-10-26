@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block body_block %}
+<font class="page_header">Create claim</font>
+<br/>
+<form method="post" action="" id="id_django_add_form">
+    {% csrf_token %}
+    <fieldset class="create_claim">
+        <div class='row'>
+            <div class="col-lg-2">
+                <font id="form_labels">{{ form.create_claim.label }}</font>
+            </div>
+            <div class="col-lg-10">
+                {{ form.create_claim }}
+            </div>
+        </div>
+        <div class='row'>
+            <div class="col-lg-12">
+                <input class="btn btn-outline-secondary float-right btn-sm" type="submit" name="add_go" value="Create">
+                <input class="btn btn-outline-secondary float-right btn-sm" type="submit" name="add" value="Create and add another">
+            </div>
+        </div>
+
+    </fieldset>
+</form>
+
+<script>
+    function bodyOnLoad(){
+        //stump
+    }
+</script>
+
+
+{% endblock %}
+
+

@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+{% block body_block %}
+
+<div class="span" >
+        <button class="{{ class_vote_up }}" type="button" id="vote_up" onclick="vote_for();">&#9650;</button>
+        <font class="page_header" id="vote_result" style="padding:0px;">{{ claim_vote_total }}</font>
+        <button class="{{ class_vote_down }}" type="button" id="vote_down" onclick="vote_against();" >&#9660;</button>
+        <font class="page_header" style="padding-left:10px;">{{ claim.title }}</font>
+        {% if user.is_authenticated %}
+            {% if subscribed %}
+                <a class="toggle_forum_subscribe" id="subscribe_btn" onclick="subscribe_forum(false);">Unsubscribe</a>
+            {% else %}
+                <a class="toggle_forum_subscribe" id="subscribe_btn" onclick="subscribe_forum(true);">Subscribe</a>
+            {% endif %}
+        {% endif %}
+</div>
+
+<div id="accordion" role="tablist" style="padding-top:10px; padding-left:0px; padding-right:0px">
+    <div class="card">
+        <div class="card-header" role="tab" id="headingDefinitions">
+            <h5 class="mb-0">
+                <a class="collapsed" data-toggle="collapse" href="#collapseRelatedClaims" aria-expanded="false" aria-controls="collapseRelatedClaims">
+                    Related Claims
+                </a>
+            </h5>
+        </div>
+        <div id="collapseRelatedClaims" class="collapse show" role="tabpanel" aria-labelledby="headingDefinitions">
+            <div class="card-body"  style="padding:0px;">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link" id="nav-supporting-claim-tab" data-toggle="tab" href="#nav-supporting-claim" role="tab" aria-controls="nav-supporting-claim" aria-selected="true">Supporting</a>
+                        <a class="nav-item nav-link" id="nav-refuting-claim-tab" data-toggle="tab" href="#nav-refuting-claim" role="tab" aria-controls="nav-refuting-claim" aria-selected="false">Refuting</a>
+                        <a class="nav-item nav-link" id="nav-similar-claim-tab" data-toggle="tab" href="#nav-similar-claim" role="tab" aria-controls="nav-similar-claim" aria-selected="true">Similar</a>
+                        <a class="nav-item nav-link" id="nav-opposite-claim-tab" data-toggle="tab" href="#nav-opposite-claim" role="tab" aria-controls="nav-opposite-claim" aria-selected="false">Opposite</a>
+                        <!--<a class="nav-item nav-link disabled" id="nav-requirements-tab" data-toggle="tab" href="#nav-requirements" role="tab" aria-controls="nav-requirements" aria-selected="false">Foundational</a>-->
+                        <!--<a class="nav-item nav-link disabled" id="nav-refinements-tab" data-toggle="tab" href="#nav-refinements" role="tab" aria-controls="nav-refinements" aria-selected="false">Refinements</a>-->
+                        <!--<a class="nav-item nav-link disabled" id="nav-generalizations-tab" data-toggle="tab" href="#nav-generalizations" role="tab" aria-controls="nav-generalizations" aria-selected="false">Generalizations</a>-->
+                    </div>
+                </nav>
+                
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade" id="nav-supporting-claim" role="tabpanel" aria-labelledby="nav-supporting-claim-tab">
+                        {{ rendered_supporting_links|safe }}
+                    </div>
+                    <div class="tab-pane fade" id="nav-refuting-claim" role="tabpanel" aria-labelledby="nav-refuting-claim-tab">
+                        {{ rendered_refuting_links|safe }}
+                    </div>
+                    <div class="tab-pane fade" id="nav-similar-claim" role="tabpanel" aria-labelledby="nav-similar-claim-tab">
+                        {{ rendered_similar_links|safe }}
+                    </div>
+                    <div class="tab-pane fade" id="nav-opposite-claim" role="tabpanel" aria-labelledby="nav-opposite-claim-tab">
+                    	{{ rendered_opposite_links|safe }}
+                    </div>
+                    <!--<div class="tab-pane fade" id="nav-requirements" role="tabpanel" aria-labelledby="nav-requirements-tab">Foundational</div>-->
+                    <!--<div class="tab-pane fade" id="nav-refinements" role="tabpanel" aria-labelledby="nav-refinements-tab">Refined</div>-->
+                    <!--<div class="tab-pane fade" id="nav-generalizations" role="tabpanel" aria-labelledby="nav-generalizations-tab">Generalized</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+<button type="button" class="btn btn-primary" onclick="open_tab('nav-refute')">Primary</button>
+-->
+
+{% include 'select_modal.html' %}
+
+
+
+<br>
+
+
+<script>
+     
+    /* https://stackoverflow.com/questions/3364493/how-do-i-clear-all-options-in-a-dropdown-box */
+    function removeOptions(selectbox)
+    {
+        var i;
+        for(i=selectbox.options.length-1;i>=0;i--)
+        {
+            selectbox.remove(i);
+        }
+    }
+
+    function show_modal(model_text, my_type_id){
+        document.getElementById("claimTypeModalLabel").innerHTML = model_text;
+        document.getElementById("claim_link_type_id").value = my_type_id;
+        document.getElementById("claim_id").value = "{{ claim.id }}";
+        document.getElementById("id_required_text").value = "";
+        document.getElementById("id_excluded_text").value = "";
+        removeOptions(document.getElementById('id_add_claim'));
+        /* This default filler value is also set in view.py */
+        $("#id_add_claim").append("<option value selected>Enter text in search fields to load selections</option>")
+        $("#claimModal").modal()
+    }
+
+    function open_tab(tab){
+        tab = tab.replace(" ", "-")
+        $('.nav-tabs a[href="#nav-' + tab + '"]').tab('show');
+    }
+
+    function bodyOnLoad(){
+        //alert("onbody_load");
+        open_tab("{{open_tab}}")
+        var new_link_found = "{{new_link_id}}"
+        if(new_link_found.length != 0){
+            document.getElementById(new_link_found).style.opacity = "0"; //hopefully this won't have a delay and appear to the user before it's set to 0
+            $("#" + new_link_found).animate({opacity: 1}, 500)
+        }
+    }
+
+
+    
+    function handle_bump_movements_and_render(rendered_supporting_links, rendered_refuting_links, rendered_similar_links, rendered_opposite_links, link_movements){
+        console.log("handle_bump_movements_and_render")
+        $.each(link_movements, function(key,value) {
+               var my_id = Object.getOwnPropertyNames(value)[0];
+               $(".bump-btn","#" + my_id).prop('disabled', true); //need to disable before moving so the user doen't double click them
+               var move_to_id = value[my_id];
+               //console.log(my_id + " should move to " + move_to_id);
+               var my_position = $("#" + my_id).position().top;
+               //console.log(my_id + " current position: " + my_position);
+               var my_future_position = $("#" + move_to_id).position().top;
+               //console.log(my_id + " future position: " + my_future_position);
+               move_me = my_future_position - my_position
+               //console.log("moving:" + move_me)
+               if (move_me < 0 ) {
+                    margin_px = "-=" + Math.abs(move_me) + "px"
+               } else {
+                    margin_px = "+=" + Math.abs(move_me) + "px"
+               }
+               value[my_id] = margin_px //replace the move to id with the pixel movement
+               });
+        my_timeout = 0
+        console.log("     link_movements: ", link_movements)
+        $.each(link_movements, function(key,value) {
+              my_timeout = 500 // if any moves happen this sets time dely for rendering html to 500
+              var my_id = Object.getOwnPropertyNames(value)[0];
+              var margin_px = value[my_id];
+              $("#" + my_id).animate({top: margin_px}, my_timeout)
+              });
+    
+        if($.trim(rendered_supporting_links).length > 0){
+          setTimeout(function() {
+                     $( "#supporting-claim-links" ).replaceWith(rendered_supporting_links);
+                     }, my_timeout);
+        }
+        if($.trim(rendered_refuting_links).length > 0){
+            setTimeout(function() {
+                       $( "#refuting-claim-links" ).replaceWith(rendered_refuting_links);
+                       }, my_timeout);
+        }
+        if($.trim(rendered_similar_links).length > 0){
+            setTimeout(function() {
+                       $( "#similar-claim-links" ).replaceWith(rendered_similar_links);
+                       }, my_timeout);
+        }
+        if($.trim(rendered_opposite_links).length > 0){
+            setTimeout(function() {
+                       $( "#opposite-claim-links" ).replaceWith(rendered_opposite_links);
+                       }, my_timeout);
+        }
+    }
+
+    
+    function bump(claimlink_id, bump_direction){
+        //alert("bump");
+        var my_url = "/engage/{{ claim.id }}/"
+        $.post(my_url,
+               {csrfmiddlewaretoken: '{{ csrf_token }}',
+               post_action: "bump",
+               claim_id: "{{ claim.id }}",
+               claimlink_id: claimlink_id,
+               bump_direction: bump_direction,
+               }, function(bump_return_items){
+               //see /Twoone/site_files/engage/fixtures/claim_link_types.json for the claimlink_id
+                    //alert(bump_return_items)
+                    my_class = bump_return_items['my_class']
+                    if(my_class == "supporting claim"){
+                        my_rendered_supporting_links = bump_return_items['rendered_links']
+                        my_rendered_refuting_links = ""
+                        my_rendered_similar_links = ""
+                        my_rendered_opposite_links = ""
+                    } else if(my_class == "refuting claim") {
+                        my_rendered_supporting_links = ""
+                        my_rendered_refuting_links = bump_return_items['rendered_links']
+                        my_rendered_similar_links = ""
+                        my_rendered_opposite_links = ""
+                    } else if(my_class == "similar claim") {
+                        my_rendered_supporting_links = ""
+                        my_rendered_refuting_links = ""
+                        my_rendered_similar_links = bump_return_items['rendered_links']
+                        my_rendered_opposite_links = ""
+                    } else if(my_class == "opposite claim") {
+                        my_rendered_supporting_links = ""
+                        my_rendered_refuting_links = ""
+                        my_rendered_similar_links = ""
+                        my_rendered_opposite_links = bump_return_items['rendered_links']
+                    }
+                    handle_bump_movements_and_render(rendered_supporting_links = my_rendered_supporting_links,
+                                                     rendered_refuting_links = my_rendered_refuting_links,
+                                                     rendered_similar_links = my_rendered_similar_links,
+                                                     rendered_opposite_links = my_rendered_opposite_links,
+                                                     link_movements = jQuery.parseJSON(bump_return_items['link_movements']))
+               }, 'json');
+    }
+
+    function vote(result){
+        var should_continue = true
+        if ((result == 'vote_against' && $("#vote_up").hasClass("has-voted-for")) ||
+            (result == 'vote_for' && $("#vote_down").hasClass("has-voted-for"))){
+            var my_lengths = $(".has-voted-1" ).length + $(".has-voted-2" ).length + $(".has-voted-3" ).length +
+                            $(".has-voted-4" ).length + $(".has-voted-5" ).length + $(".has-voted-6" ).length +
+                            $(".has-voted-7" ).length + $(".has-voted-8" ).length + $(".has-voted-9" ).length +
+                            $(".has-voted-10" ).length
+            if ( my_lengths ) {
+                should_continue = confirm("Changing your vote will drop any bumps you've made. Are you sure you want to proceed?");
+            }
+        }
+        if (should_continue == true) {
+            var my_url = "/engage/{{ claim.id }}/" /* this part isn't printing*/
+            $.post(my_url,
+                   {csrfmiddlewaretoken: '{{ csrf_token }}',
+                   post_action: "vote",
+                   claim_id: "{{ claim.id }}",
+                   vote: result,
+                   },
+                   function(vote_update){
+                        var claim_vote_total = vote_update['claim_vote_total']
+                        $("#vote_result").text(claim_vote_total);
+                        var class_vote_up = vote_update['class_vote_up']
+                        console.log("class_vote_up:" + vote_update['class_vote_up'])
+                        var class_vote_down = vote_update['class_vote_down']
+                        console.log("class_vote_down:" + vote_update['class_vote_down'])
+                        $("#vote_up").attr({class: class_vote_up,});
+                        $("#vote_down").attr({class: class_vote_down,});
+                        console.log("link_movements:" + vote_update['link_movements'])
+                        console.log("rendered_supporting_links:" + vote_update['rendered_supporting_links'])
+                        handle_bump_movements_and_render(rendered_supporting_links = vote_update['rendered_supporting_links'],
+                                                    rendered_refuting_links = vote_update['rendered_refuting_links'],
+                                                    rendered_similar_links = "",
+                                                    rendered_opposite_links = "",
+                                                    link_movements = jQuery.parseJSON(vote_update['link_movements']))
+                   }, 'json');
+        }
+    }
+
+    function vote_for(){
+        vote('vote_for');
+    }
+
+    function vote_against(){
+        vote('vote_against');
+    }
+
+    function set_selections(my_selection_ids, my_selection_titles, my_warning){
+
+        removeOptions(document.getElementById('id_add_claim'))
+        $("#id_add_claim").append("<option value selected>" + my_warning + "</option>")
+        for(var i = 0; i<my_selection_ids.length; i++){
+            $("#id_add_claim").append("<option value = \"" + my_selection_ids[i] + "\">" + my_selection_titles[i] + "</option>");
+        }
+        
+    }
+
+
+    function submit_form_data(){
+        var my_required_text = document.getElementById('id_required_text');
+        var my_excluded_text = document.getElementById('id_excluded_text');
+        var my_url = "/engage/{{ claim.id }}/"
+        $.post(my_url,
+               {csrfmiddlewaretoken: '{{ csrf_token }}',
+               /*polarity: my_polarity,*/
+               post_action: "modify_choicefield",
+               claim_id: "{{ claim.id }}",
+               claim_link_type_id: document.getElementById("claim_link_type_id").value,
+               /* my_post_list: "refresh_choices",*/
+               required_text: my_required_text.value,
+               excluded_text: my_excluded_text.value,
+               }, function(selection_update){
+               set_selections(selection_update['selection_ids'],
+                              selection_update['selection_titles'],
+                              selection_update['warn_no_selections']);
+               }, 'json');
+    }
+    
+
+    function enter_pressed_submit(){
+        if (event.keyCode == 13) {
+            submit_form_data()
+        }
+    }
+
+    function subscribe_forum(subscribe){
+        console.log("subscribe:", subscribe)
+        var my_url = "/engage/{{ claim.id }}/"
+        $.post(my_url,
+               {csrfmiddlewaretoken: '{{ csrf_token }}',
+               post_action: "subscribe",
+               claim_id: "{{ claim.id }}",
+               subscribe: subscribe,
+               });/*function(my_response){
+               my_subscription_status = my_response['subscription_status'];
+               if (my_subscription_status == "subscribed") {
+                    console.log("Making unsubscribe button.")
+                    document.getElementById("subscribe_btn").onclick = "subscribe_forum(false);";
+                    document.getElementById("subscribe_btn").innerHTML = "Unsubscribe";
+               } else if (my_subscription_status == "unsubscribed"){
+                    console.log("Making subscribe button.")
+                    document.getElementById("subscribe_btn").onclick = "subscribe_forum(true);";
+                    document.getElementById("subscribe_btn").innerHTML = "Subscribe";
+               }
+               }, 'json');*//*For some reson when updated with the element ids
+                             the onclick woulnd't update and the button wouldn't work again.
+                             just going to reload the page for now. that's how the multiple view
+                             templates will work so it will be consistent at least.*/
+        location.reload();
+    }
+                      
+</script>
+
+
+{% endblock %}
+
+

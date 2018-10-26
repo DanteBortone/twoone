@@ -1,0 +1,426 @@
+:root {
+    --text-field-width: 100%;
+    --col1_width: 15%;
+    --col1_font-size: 14px;
+    --search_field_title_font-size: 16px;
+    --claim_font-size: 16px;
+    --radio_text_font-size: 16px;
+    --table_header_font-size: 20px;
+    
+    --std_side_padding_width: 20px
+}
+
+/*
+div[id^="link-id"] {
+	margin-top: -22px;
+}
+*/
+
+.select_modal {
+  /*border: none;*/
+  background-color: transparent;
+  height: 24px;
+  margin-top:5px;
+  margin-right:5px;
+  padding: 0px;
+  width: 24px;
+  float: right;
+  /*outline: none;*/
+  vertical-align: middle;
+  line-height: 0px;
+}
+
+.select_modal_span {
+  color: #167FFB;
+  font-size: 32px;
+  padding:0px;
+  padding-left:1px;
+}
+
+
+
+.main {
+	padding-left: var(--std_side_padding_width); 
+	padding-right: var(--std_side_padding_width);
+}
+
+#nav_bar {
+	margin-top: 12px;
+	margin-bottom: 12px;
+	padding-top: 4px; 
+	padding-bottom: 4px;
+}
+
+#top_links {
+    text-align: right;
+    padding-right: var(--std_side_padding_width);
+    margin-bottom: -4px;
+    margin-top: -4px;
+    font-size: 13px;
+}
+
+font.page_header {
+ 	font-size:32px; 
+ 	font-weight: 500;
+}
+
+.card-header {
+	background-color: #EEEEEE;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 15px;
+}
+
+
+.claim-group {
+	padding-left: 20px;
+	padding-top: 5px;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	/*color: black;*/
+	/*list-style-type: none;*/  
+}
+
+
+.claim-list-note {
+    font-size: calc(var(--claim_font-size) - 2px);
+    font-style: italic;
+    color: #AAAAAA;
+    padding-left: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-bottom: 0px;
+    float: left;
+}
+
+
+fieldset.support_refute div[class="col-lg-2"] {
+	text-align: left;
+}
+
+
+
+fieldset.support_refute div[class="row"] {
+	 padding-bottom: 10px;
+}
+
+fieldset.support_refute ul {
+	list-style: none;
+	padding-top: 0px;
+	padding-left: 0px
+}
+
+fieldset.support_refute li {
+	display: inline;
+	padding-right: 20px; /* spaces between the radio buttons */
+	padding-bottom: 0px;
+}
+
+
+fieldset.support_refute input[type="text"] {
+    width: var(--text-field-width);
+    font-size: 14px
+}
+
+
+fieldset.support_refute select {
+    width: var(--text-field-width);
+    font-size: var(--col1_font-size)
+}
+ 
+fieldset.support_refute td[class="col1"] {
+    width: var(--col1_width);
+    font-size: var(--col1_font-size)
+}
+fieldset.support_refute font[id="search_field_title"] {
+    font-size: var(--search_field_title_font-size);
+    font-weight: bold;
+}
+
+fieldset.support_refute font[id="form_labels"] {
+    position: relative;
+	top: 19%;
+	font-size: 14px;
+}
+
+
+fieldset.support_refute label[for^="id_polarity"] {
+    font-size: var(--radio_text_font-size);
+}
+
+fieldset.support_refute input[id^="id_polarity"] {
+    /* moves the radio button up relative to the radio label */
+    position:relative;top:-1px;
+}
+
+th {
+    font-size: var(--table_header_font-size);
+    padding-left: 10px;
+}
+
+#myTW {
+    position: relative;
+    margin-left: 5px;
+    margin-top: 1px;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    color: #333; /* old IE */
+    background-color: #333;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+/*
+.verticalLine {
+    border-left: thick solid #ff0000;
+}
+*/
+
+.claims {
+    font-size: var(--claim_font-size);
+}
+
+
+.vote-btn {
+    font-size: 32px;
+	border: none;
+	background-color: transparent;
+    padding: 0px;
+    }
+
+.bump-btn {
+	border: none;
+	background-color: transparent;
+    padding: 0px;
+}
+
+    
+.greyed-out {
+	color: #C0C0C0;
+}
+
+
+.no-votes-yet {
+	color: #3399FF;
+}
+
+
+.has-voted-for {
+	color: #FF7F50;
+}
+
+/* 
+http://www.perbang.dk/rgbgradient/ 
+did 20 breaks and recorded the colors 11-20 
+*/
+
+
+.has-voted-0 {
+	color: #3399FF;
+}
+
+.has-voted-1 {
+	color: #9E8BA2;
+}
+
+.has-voted-2 {
+	color: #A98999;
+}
+
+.has-voted-3 {
+	color: #B38890;
+}
+
+.has-voted-4 {
+	color: #BE8787;
+}
+
+.has-voted-5 {
+	color: #C9857E;
+}
+
+.has-voted-6 {
+	color: #D48474;
+}
+
+.has-voted-7 {
+	color: #DE836B;
+}
+
+.has-voted-8 {
+	color: #E98162;
+}
+
+.has-voted-9 {
+	color: #F48059;
+}
+
+.has-voted-10 {
+	color: #FF7F50;
+}
+
+.can-vote:hover {
+	text-decoration: underline;
+}
+
+/* Forum css  */
+/* from https://static.archlinux.org.ru/static/css/default.css */
+/*
+table {
+    max-width: 100%;
+    background-color: transparent
+}
+*/
+th {
+    text-align: left;
+    background-color: #eee;
+}
+
+.updated {
+	font-size: 12px;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 20px /* spaces between the posts*/
+    border-color: #ccc;
+    border: 2px solid #ccc;
+}
+
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td,
+.table > tbody > tr > td, .table > tfoot > tr > td {
+    padding-top: 4px; /* tightens up the box around the header*/
+    padding-bottom: 5px;
+    padding-right: 15px;
+}
+
+.topic > h1 {
+	font-size: 32px;
+	margin-bottom: 20px;
+}
+
+.permalink {
+	display: none;
+}
+
+.post-form {
+	width:50%
+}
+
+.form-control {
+	margin-bottom: 20px;
+}
+
+#id_login{
+	width: 100%
+}
+
+#id_body{
+	width: 100%
+}
+
+.avatar {
+	display: none;
+}
+
+.post-extra-info {
+	display : none;
+}
+
+.post-related {
+	display : none;
+}
+
+.post-controls {
+	display : none;
+}
+
+.btn-primary {
+	color:#FFFFFF;
+}
+
+.post-info{
+	width: 20%;
+}
+
+.related-claim-header{
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+/* for spacing the spans*/
+.bump-span{
+	display: inline-block;
+	width: 10%;
+	text-align: center;
+}
+.claim-span{
+    display: inline-block;
+	width: 70%;
+	padding-left: 20px;
+}
+.post-span{
+	display: inline-block;
+	width: 10%;
+	text-align: center;
+}
+
+#bump_up{
+	padding-right:5px;
+}
+
+#bump_down{
+	padding-left:5px;
+}
+
+.pagination ul {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.pagination ul li {
+	display: inline;
+}
+
+.pagination ul li a {
+    color: black;
+    float: left;
+    padding: 4px 8px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid #ddd; /* Gray */
+}
+
+.pagination a:hover {background-color: #eee;}
+
+.controls {
+	margin-top: 40px;
+}
+
+a.unsubscribe {
+    float: right;
+    color: black;
+    display: inline;
+	padding: 2px 4px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid #ddd; /* Gray */
+}
+a.unsubscribe:hover {background-color: #eee;}
+
+a.toggle_forum_subscribe {
+    float: right;
+    margin-top: 10px;
+    color: black;
+    display: inline;
+	padding: 2px 4px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid #ddd; /* Gray */
+}
+a.toggle_forum_subscribe:hover {background-color: #eee;}

@@ -1,0 +1,92 @@
+[
+{
+  "model": "auth.user",
+  "pk": 8,
+  "fields": {
+    "password": "pbkdf2_sha256$100000$7e30thZYS9Kf$cSSb7DbEgFq3mdBN7Lj8U0Nh7d1thxl/FtVTBTZ0BYU=",
+    "last_login": "2018-06-14T00:30:44.739Z",
+    "is_superuser": true,
+    "username": "db",
+    "first_name": "",
+    "last_name": "",
+    "email": "dantebortone@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2018-05-06T18:44:03.044Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 9,
+  "fields": {
+    "password": "pbkdf2_sha256$100000$OkMtt5EGZbAY$dKuN99FpF3Vn2GrDPQlhp2e3MasWuz5+auBKNbmpK4A=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "user1",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2018-05-08T00:46:55.167Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "engage.claimlinktype",
+  "pk": 1,
+  "fields": {
+    "title": "supporting claim",
+    "forward_name": "is supported by",
+    "reverse_name": "supports",
+    "is_directional": true,
+    "is_recursive": true
+  }
+},
+{
+  "model": "engage.claimlinktype",
+  "pk": 2,
+  "fields": {
+    "title": "refuting claim",
+    "forward_name": "is refuted by",
+    "reverse_name": "refutes",
+    "is_directional": true,
+    "is_recursive": true
+  }
+},
+{
+  "model": "engage.claimlinktype",
+  "pk": 3,
+  "fields": {
+    "title": "similar claim",
+    "forward_name": "is similar to",
+    "reverse_name": "is similar to",
+    "is_directional": false,
+    "is_recursive": true
+  }
+},
+{
+  "model": "engage.claimlinktype",
+  "pk": 4,
+  "fields": {
+    "title": "opposite claim",
+    "forward_name": "is the opposite of",
+    "reverse_name": "is the opposite of",
+    "is_directional": false,
+    "is_recursive": true
+  }
+},
+{
+  "model": "pybb.category",
+  "pk": 1,
+  "fields": {
+    "name": "Claims",
+    "position": 0,
+    "hidden": false,
+    "slug": "Claims"
+  }
+}
+]

@@ -1,0 +1,56 @@
+<!-- Modal -->
+<div class="modal fade" id="claimModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="claimTypeModalLabel">Holder</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="" id="id_django_form">
+                    {% csrf_token %}
+                    <fieldset class="support_refute">
+                        <div class='row'>
+                            <div class="col-lg-2">
+                                <font id="form_labels">{{ link_form.required_text.label }}</font>
+                            </div>
+                            <div class="col-lg-10">
+                                {{ link_form.required_text }}
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class="col-lg-2">
+                                <font id="form_labels">{{ link_form.excluded_text.label }}</font>
+                            </div>
+                            <div class="col-lg-10">
+                                {{ link_form.excluded_text }}
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class="col-lg-12">
+                                <input class="btn btn-outline-secondary float-right btn-sm" type="submit" value="Search" onclick="submit_form_data()"/></td>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class="col-lg-2">
+                                <font id="form_labels">Select:</font>
+                            </div>
+                            <div class="col-lg-10">
+                                {{ link_form.add_claim }}
+                            </div>
+                        </div>
+                        <input type="hidden" name="claim_link_type_id" id="claim_link_type_id">
+                        <input type="hidden" name="claim_id" id="claim_id">
+                        <div class='row'>
+                            <div class="col-lg-12">
+                                <input class="btn btn-outline-secondary float-right btn-sm" type="submit" name="submit" value="Add"/></td>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+{% extends 'pybb/base.html' %}
+
+{% load pybb_tags i18n staticfiles %}
+{% load engage_tags %}
+
+
+{% block extra_head %}
+{{ block.super }}
+{{ form.media.css }}
+{% endblock %}
+{% block extra_script %}
+{{ block.super }}
+{{ form.media.js }}
+<script type="text/javascript" src="{% static 'pybb/js/jquery.formset.min.js' %}"></script>
+{% endblock %}
+
+{% block breadcrumb %}
+{% with object=topic %}
+{% include "pybb/breadcrumb.html" %}
+{% endwith %}
+{% endblock %}
+
+{% block content %}
+<div class="topic">
+    <h1>Homepage</h1>
+
+    {% if user.is_authenticated == False %}
+    <p> Welcome Guest!</p>
+    <p> You may view public claims as a guest but may not vote or participate in the discussion.</p>
+    <p><a href="{% url 'login' %}">Login</a></p>
+    <p><a href="{% url 'logout' %}">Register</a></p>
+
+    {% else %}
+    <p> Welcome {{ user.username }}!</p> </br>
+    <h4>Subscriptions:</h4>
+    {% endif %}
+    
+    {% include "pybb/pagination.html" %}
+    
+    {% if object_list %}
+    <div class="posts">
+        {% for my_object in object_list %}
+        {% cycle 'odd' 'even' as rowcolors silent %}
+            {% if my_object|get_class == 'Post'%}
+                {% with my_object as post %}
+                    {% include "post_template.html" %}
+                {% endwith %}
+            {% elif my_object|get_class == 'ClaimLink'%}
+                {% with my_object as claimlink %}
+                    {% include "claimlink_template.html" %}
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+        {% if user.is_authenticated == False %}
+            <p style="font-style: italic;">You may not make subscriptions unless you are logged in.</p>
+        {% else %}
+            <p style="font-style: italic;">You have not yet made any subscriptions.</p>
+        {% endif %}
+        <p>Try viewing claims via <a href="/engage/">search</a> or <a href="/user/new/">recent</a> activity.</p>
+    {% endif %}
+    
+    
+    <div>&nbsp;</div>
+    {% with _('Posts') as label %}
+    {% include "pybb/pagination.html" %}
+    {% endwith %}
+    
+</div>
+{% endblock %}
+

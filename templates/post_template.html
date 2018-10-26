@@ -1,0 +1,60 @@
+{% load i18n pybb_tags staticfiles %}
+
+{% pybb_get_profile user=post.user as post_user_profile %}
+{% pybb_get_profile user=user as user_profile %}
+
+<a name="post-{{ post.id }}"></a> {# may be remove this string? #}
+<table class="table table-bordered post {% if post.on_moderation %}on-moderation{% endif %}" id="post-{{ post.id }}">
+    <thead class="post-header">
+    <tr>
+    <th colspan="2">
+        <a class="permalink" href="{{ post.get_absolute_url }}">#</a>
+        <span class="updated">New post - {% pybb_time post.created %}</span>
+    </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="post-row">
+        <td class="post-info">
+            <div class="post-topic">Discussion:
+                <a href="/forum/topic/{{ post.topic.id }}/">
+                    <span class="post-topic">{{ post.topic }}</span>
+                </a>
+                {% if user.is_authenticated %}
+                    {% if user in post.topic.subscribers.all %}
+                    <a class="toggle_forum_subscribe" id="subscribe_btn" onclick="subscribe_topic('{{my_url}}', {{ post.topic.id }}, false);">Unsubscribe</a>
+                    {% else %}
+                        <a class="toggle_forum_subscribe" id="subscribe_btn" onclick="subscribe_topic('{{my_url}}', {{ post.topic.id }}, true);">Subscribe</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            
+            <div class="post-summary">Post:
+                    <span class="post-summary">{{ post.body }}</span>
+            </div>
+            
+            <div class="post-author">User:
+                <a href="{{ post_user_profile.get_absolute_url }}">
+                    <span class="post-username">{{ post_user_profile.get_display_name }}</span>
+                </a>
+            </div>
+            
+            
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<script>
+    function subscribe_topic(my_url, topic_id, subscribe){
+        console.log("subscribe:", subscribe)
+        $.post(my_url,{
+               csrfmiddlewaretoken: '{{ csrf_token }}',
+               post_action: "topic_subscription",
+               topic_id: topic_id,
+               subscribe: subscribe,
+               });
+               location.reload();
+    }
+</script>

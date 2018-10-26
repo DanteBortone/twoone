@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block body_block %}
+
+<font class="page_header">Settings</font>
+
+{% if user.is_authenticated == False %}
+    <p style="padding-left:10px">You must be logged in to access these options.</p>
+{% else %}
+    <p style="padding-left:10px"> Adjust settings for {{ user.username }}:</p>
+    <!--
+     # can't set this up until I have a server that can send emails
+     # https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Authentication
+     # https://stackoverflow.com/questions/21563227/django-allauth-example-errno-61-connection-refused
+     <p style="padding-left:10px"><a href="{% url 'password_reset' %}">Reset password</a></p>
+     -->
+{% endif %}
+
+
+<script>
+    function bodyOnLoad(){
+        //stump
+    }
+</script>
+
+{% endblock %}
+
+

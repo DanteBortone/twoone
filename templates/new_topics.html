@@ -1,0 +1,41 @@
+{% extends 'pybb/base.html' %}
+
+{% load pybb_tags i18n staticfiles %}
+
+
+{% block extra_head %}
+{{ block.super }}
+{{ form.media.css }}
+{% endblock %}
+{% block extra_script %}
+{{ block.super }}
+{{ form.media.js }}
+<script type="text/javascript" src="{% static 'pybb/js/jquery.formset.min.js' %}"></script>
+{% endblock %}
+
+{% block breadcrumb %}
+{% with object=topic %}
+{% include "pybb/breadcrumb.html" %}
+{% endwith %}
+{% endblock %}
+
+{% block content %}
+<div class="topic">
+    <h1>Recent activity:</h1>
+    
+    {% include "pybb/pagination.html" %}
+    
+    <div class="posts">
+        {% for claimlink in claimlink_list %}
+        {% cycle 'odd' 'even' as rowcolors silent %}
+        {% include "claimlink_template.html" %}
+        {% endfor %}
+    </div>
+    <div>&nbsp;</div>
+    {% with _('Posts') as label %}
+    {% include "pybb/pagination.html" %}
+    {% endwith %}
+    
+</div>
+{% endblock %}
+

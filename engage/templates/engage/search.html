@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block body_block %}
+<font class="page_header">Go to a claim</font>
+
+<form method="post" action="" id="id_django_form">
+    {% csrf_token %}
+    <fieldset class="support_refute">
+        <div class='row'>
+            <div class="col-lg-2">
+                <font id="form_labels">{{ link_form.required_text.label }}</font>
+            </div>
+            <div class="col-lg-10">
+                {{ link_form.required_text }}
+            </div>
+        </div>
+        <div class='row'>
+            <div class="col-lg-2">
+                <font id="form_labels">{{ link_form.excluded_text.label }}</font>
+            </div>
+            <div class="col-lg-10">
+                {{ link_form.excluded_text }}
+            </div>
+        </div>
+        <div class='row'>
+            <div class="col-lg-12">
+                <input class="btn btn-outline-secondary float-right btn-sm" type="submit" value="Search" onclick="submit_form_data()"/>
+            </div>
+        </div>
+        <div class='row'>
+            <div class="col-lg-2">
+                <font id="form_labels">Select:</font>
+            </div>
+            <div class="col-lg-10">
+                {{ link_form.add_claim }}
+            </div>
+        </div>
+        <input type="hidden" name="claim_link_type_id" id="claim_link_type_id">
+        <input type="hidden" name="claim_id" id="claim_id">
+        <div class='row'>
+            <div class="col-lg-12">
+                <input class="btn btn-outline-secondary float-right btn-sm" type="submit" name="submit" value="Go"/></td>
+            </div>
+        </div>
+    </fieldset>
+</form>
+<br>
+
+
+<script>
+
+    function bodyOnLoad(){
+        //stump
+    }
+
+    function set_selections(my_selection_ids, my_selection_titles, my_warning){
+        function removeOptions(selectbox)
+        {
+            var i;
+            for(i=selectbox.options.length-1;i>=0;i--)
+            {
+                selectbox.remove(i);
+            }
+        }
+        removeOptions(document.getElementById('id_add_claim'))
+        $("#id_add_claim").append("<option value selected>" + my_warning + "</option>")
+        for(var i = 0; i<my_selection_ids.length; i++){
+            $("#id_add_claim").append("<option value = \"" + my_selection_ids[i] + "\">" + my_selection_titles[i] + "</option>");
+        }
+        
+    }
+
+
+    function submit_form_data(){
+        var my_required_text = document.getElementById('id_required_text');
+        var my_excluded_text = document.getElementById('id_excluded_text');
+        var my_url = "/engage/"
+        $.post(my_url,
+               {csrfmiddlewaretoken: '{{ csrf_token }}',
+               refresh_choices: "refresh_choices",
+               required_text: my_required_text.value,
+               excluded_text: my_excluded_text.value,
+               }, function(selection_update){
+               set_selections(selection_update['selection_ids'],
+                              selection_update['selection_titles'],
+                              selection_update['warn_no_selections']);
+               //alert(selection_update['selection_ids']);
+               }, 'json');
+            
+    }
+        
+    function enter_pressed_submit(){
+        if (event.keyCode == 13) {
+            submit_form_data()
+        }
+    }
+</script>
+
+
+
+{% endblock %}
