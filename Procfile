@@ -1,1 +1,1 @@
-web: gunicorn twoone.wsgi
+web: gunicorn Twoone.wsgi
