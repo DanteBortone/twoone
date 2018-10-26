@@ -1,1 +1,1 @@
-web: gunicorn sampledeploy.wsgi
+web: gunicorn twoone.wsgi
