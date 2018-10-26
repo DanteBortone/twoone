@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from pybb.models import Topic, Forum, Category
+from django.db.utils import ProgrammingError
+
 
 # the max number of votes one can give to bump a claim up in priority
 def MAX_BUMPS():
@@ -111,12 +113,17 @@ class Bump(models.Model):
         return "%s bumps for %s by %s" % (self.count, self.claimlink, self.user.username)
 
 
+# These are needed because the supporting_linktype is called before the ClaimLinkTypes
+#   are added in the database.
 def supporting_linktype():
     my_linktype = ClaimLinkType.objects.filter(title="supporting claim")
     try:
-        my_linktype
-    except NameError:
+        if(my_linktype):
+            dummy_var = True
+
+    except ProgrammingError:
         return None
+
     else:
         if(my_linktype):
             return my_linktype[0]
@@ -126,33 +133,44 @@ def supporting_linktype():
 def refuting_linktype():
     my_linktype = ClaimLinkType.objects.filter(title="refuting claim")
     try:
-        my_linktype
-    except NameError:
+        if(my_linktype):
+            dummy_var = True
+
+    except ProgrammingError:
         return None
+    
     else:
         if(my_linktype):
             return my_linktype[0]
         else:
             return None
+
 
 def similar_linktype():
     my_linktype = ClaimLinkType.objects.filter(title="similar claim")
     try:
-        my_linktype
-    except NameError:
+        if(my_linktype):
+            dummy_var = True
+
+    except ProgrammingError:
         return None
+    
     else:
         if(my_linktype):
             return my_linktype[0]
         else:
             return None
 
+
 def opposite_linktype():
     my_linktype = ClaimLinkType.objects.filter(title="opposite claim")
     try:
-        my_linktype
-    except NameError:
+        if(my_linktype):
+            dummy_var = True
+
+    except ProgrammingError:
         return None
+    
     else:
         if(my_linktype):
             return my_linktype[0]

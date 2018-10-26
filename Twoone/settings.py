@@ -19,7 +19,7 @@ db_from_env = dj_database_url.config(conn_max_age=300)
 try:
     DATABASES
 except NameError:
-    print("DATABASES is an environment varialbe available in Heroku. Not available locally.")
+    print("DATABASES is an environment variable available in Heroku. Not available locally.")
 else:
     DATABASES['default'].update(db_from_env)
 
@@ -54,6 +54,7 @@ INSTALLED_APPS = [
                   'django.contrib.staticfiles',
                   'pybb.apps.PybbConfig',
                   'django.contrib.sites', # added due to error after adding pybb:"RuntimeError: Model class django.contrib.sites.models.Site doesn't declare an explicit app_label and isn't in an application in INSTALLED_APPS."
+                  'django_extensions', # to reset the database
                   ]
 
 MIDDLEWARE = [
