@@ -100,8 +100,8 @@ DATABASES = {
 
 #print("pre: ", DATABASES)
 # https://medium.com/agatha-codes/9-straightforward-steps-for-deploying-your-django-app-with-heroku-82b952652fb4
-#db_from_env = dj_database_url.config(conn_max_age=300)
-#DATABASES['default'].update(db_from_env)
+db_from_env = dj_database_url.config(conn_max_age=300)
+DATABASES['default'].update(db_from_env)
 #print("post: ", DATABASES)
 
 
