@@ -150,7 +150,7 @@ PYBB_ALLOW_DELETE_OWN_POST = False
 PYBB_SMILES = {}
 PYBB_TOPIC_PAGE_SIZE = 10
 
-STATIC_ROOT = os.path.join(BASE_DIR, ‘staticfiles’)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 django_heroku.settings(locals())
 
