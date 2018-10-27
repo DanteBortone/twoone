@@ -1,1 +1,1 @@
-web: gunicorn Twoone.wsgi
+web: gunicorn Twoone.wsgi --log-file -

@@ -31,7 +31,7 @@ SITE_ID = 1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'twoone.herokuapp.com']
 
 
 # Application definition
@@ -150,7 +150,7 @@ PYBB_ALLOW_DELETE_OWN_POST = False
 PYBB_SMILES = {}
 PYBB_TOPIC_PAGE_SIZE = 10
 
-#STATIC_ROOT = os.path.join(BASE_DIR, ‘staticfiles’)
+STATIC_ROOT = os.path.join(BASE_DIR, ‘staticfiles’)
 
 django_heroku.settings(locals())
 
