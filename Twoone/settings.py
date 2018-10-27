@@ -141,7 +141,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = '/static/'
 
 # pybb additions
 TEMPLATE_CONTEXT_PROCESSORS = ('pybb.context_processors.processor',)
@@ -152,7 +151,14 @@ PYBB_ALLOW_DELETE_OWN_POST = False
 PYBB_SMILES = {}
 PYBB_TOPIC_PAGE_SIZE = 10
 
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (
+                    os.path.join(BASE_DIR, 'static'),
+                    )
+
+print("STATIC_ROOT: ", STATIC_ROOT)
+print("STATICFILES_DIRS: ", STATICFILES_DIRS)
 
 django_heroku.settings(locals())
 
