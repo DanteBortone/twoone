@@ -14,14 +14,8 @@ import os
 import django_heroku
 import dj_database_url
 
-# https://medium.com/agatha-codes/9-straightforward-steps-for-deploying-your-django-app-with-heroku-82b952652fb4
-db_from_env = dj_database_url.config(conn_max_age=300)
-try:
-    DATABASES
-except NameError:
-    print("DATABASES is an environment variable available in Heroku. Not available locally.")
-else:
-    DATABASES['default'].update(db_from_env)
+
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -54,7 +48,7 @@ INSTALLED_APPS = [
                   'django.contrib.staticfiles',
                   'pybb.apps.PybbConfig',
                   'django.contrib.sites', # added due to error after adding pybb:"RuntimeError: Model class django.contrib.sites.models.Site doesn't declare an explicit app_label and isn't in an application in INSTALLED_APPS."
-                  'django_extensions', # to reset the database
+                  #'django_extensions', # to reset the database
                   ]
 
 MIDDLEWARE = [
@@ -103,6 +97,10 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# https://medium.com/agatha-codes/9-straightforward-steps-for-deploying-your-django-app-with-heroku-82b952652fb4
+db_from_env = dj_database_url.config(conn_max_age=300)
+DATABASES['default'].update(db_from_env)
 
 
 # Password validation
