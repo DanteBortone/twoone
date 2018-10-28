@@ -159,8 +159,8 @@ STATICFILES_DIRS = (
                     os.path.join(BASE_DIR, 'static'),
                     )
 
-print("STATIC_ROOT: ", STATIC_ROOT)
-print("STATICFILES_DIRS: ", STATICFILES_DIRS)
+# print("STATIC_ROOT: ", STATIC_ROOT)
+# print("STATICFILES_DIRS: ", STATICFILES_DIRS)
 
 # To add compression and caching support: http://whitenoise.evans.io/en/stable/django.html
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

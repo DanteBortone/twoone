@@ -9,7 +9,7 @@ idna==2.7
 Markdown==2.6.11
 psycopg2==2.7.5
 psycopg2-binary==2.7.5
--e git+https://github.com/DanteBortone/pybbm.git@65802e08fccaca1a694a22203b6806f1147bddf2#egg=pybbm
+-e git+https://github.com/DanteBortone/pybbm.git@ced86c5c2c8d5d7a290c07ba795758e1aba2a7c7#egg=pybbm
 python-dateutil==1.5
 pytz==2018.3
 requests==2.20.0
