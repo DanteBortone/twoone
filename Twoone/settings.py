@@ -45,6 +45,7 @@ INSTALLED_APPS = [
                   'django.contrib.contenttypes',
                   'django.contrib.sessions',
                   'django.contrib.messages',
+                  'whitenoise.runserver_nostatic',
                   'django.contrib.staticfiles',
                   'pybb.apps.PybbConfig',
                   'django.contrib.sites', # added due to error after adding pybb:"RuntimeError: Model class django.contrib.sites.models.Site doesn't declare an explicit app_label and isn't in an application in INSTALLED_APPS."
