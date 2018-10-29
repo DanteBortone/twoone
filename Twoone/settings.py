@@ -36,8 +36,7 @@ ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'twoone.herokuapp.com']
 
 # Application definition
 
-INSTALLED_APPS = [
-                  'user.apps.UserConfig',
+INSTALLED_APPS = ['user.apps.UserConfig',
                   'create.apps.CreateConfig',
                   'engage.apps.EngageConfig',
                   'django.contrib.admin',
