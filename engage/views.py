@@ -7,7 +7,8 @@ import json, re
 from django.db.models import Sum
 from pytz import timezone
 from django.views.generic.base import TemplateView
-
+from pybb.models import ForumSubscription
+from user.views import forum_subscription_response
 
 #from pybb.models import Post
 
@@ -557,7 +558,7 @@ class EngageView(TemplateView):
         #print("claim.forum: ", claim.forum)
         #print("subscribed: ", self.request.user in claim.forum.subscribers.all())
         
-        ctx["subscribed"] = self.request.user in claim.forum.subscribers.all()
+        ctx["subscribed"] = len(ForumSubscription.objects.filter(user = self.request.user, forum = claim.forum)) > 0
         ctx.update(self.render_all_links(claim))
         #print('get form:', ctx['form'])
         return(ctx)
@@ -643,7 +644,8 @@ class EngageView(TemplateView):
                     elif post_action == "modify_choicefield":
                         my_response = self.modify_choicefield_post_response(claim, post_items)
                     elif post_action == "subscribe":
-                        my_response = self.subscribe_response(claim, request.POST['subscribe'])
+                        my_response = forum_subscription_response(self.request.user, subscribed_item = claim.forum, subscribe = request.POST['subscribe'])
+                        #my_response = self.subscribe_response(claim, request.POST['subscribe'])
                 elif 'submit' in post_items:
                     my_response = self.submit_post_response(claim, post_items, **kwargs)
             else:
