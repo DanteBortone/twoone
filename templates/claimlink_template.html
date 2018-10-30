@@ -1,5 +1,7 @@
 {% load i18n pybb_tags staticfiles %}
 
+{% load engage_tags %}
+
 {% pybb_get_profile user=claimlink.user as claimlink_user_profile %}
 
 <table class="table table-bordered claimlink" id="claimlink-{{ claimlink.id }}">
@@ -18,7 +20,8 @@
                     <span class="claimlink-topic">{{ claimlink.primary_claim.title }}</span>
                 </a>
                 {% if user.is_authenticated %}
-                    {% if user in claimlink.primary_claim.forum.subscribers.all %}
+                    {% is_subscribed user claimlink.primary_claim.forum as is_subscribed_flag %}
+                    {% if is_subscribed_flag %}
                         <a class="toggle_forum_subscribe" id="subscribe_btn" onclick="subscribe_forum('{{my_url}}', {{ claimlink.primary_claim.forum.id }}, false);">Unsubscribe</a>
                     {% else %}
                         <a class="toggle_forum_subscribe" id="subscribe_btn" onclick="subscribe_forum('{{my_url}}', {{ claimlink.primary_claim.forum.id }}, true);">Subscribe</a>
@@ -65,8 +68,7 @@
                post_action: "forum_subscription",
                forum_id: forum_id,
                subscribe: subscribe,
-               });
-        location.reload();
+               }, function(){ location.reload() } ); /* 'function(){}' is required here */
     }
 
 </script>

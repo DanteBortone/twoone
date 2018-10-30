@@ -4,37 +4,58 @@ from django.views.generic.base import TemplateView
 from django.views.generic import ListView
 from pybb.views import PaginatorMixin
 from pybb import defaults
-from pybb.models import Post, Topic, Forum
+from pybb.models import Post, Topic, Forum, ForumSubscription
 from django.http import HttpResponse
 from itertools import chain
 from django.contrib.auth.models import User
 
 from django.urls import reverse
 
+def topic_subscription_response(user, subscribed_item, subscribe):
+    print("topic_subscription_response")
+    print("subscribe: ", subscribe)
+    # this is also in EngageView
+    my_response = ''
+    if user.is_authenticated:
+        if subscribe == "true":
+            if not (user in subscribed_item.subscribers.all()):
+                # subscribe
+                subscribed_item.subscribers.add(user)
+        else:
+            if user in subscribed_item.subscribers.all():
+                # unsubscribe
+                subscribed_item.subscribers.remove(user)
+    else:
+        print("Unauthenticated user just tired to make a subscription.  They should never have been given this option.")
+    return HttpResponse(my_response)
+    
+def forum_subscription_response(user, subscribed_item, subscribe):
+    print("forum_subscription_response")
+    print("subscribe: ", subscribe)
+    # this is also in EngageView
+    my_response = ''
+    if user.is_authenticated:
+        # does this subscritpion exist already
+        existing_subscription = ForumSubscription.objects.filter(user = user, forum = subscribed_item)
+        if subscribe == "true":
+            print("will attempt to subscribe..")
+            if not existing_subscription:
+                new_subscription = ForumSubscription()
+                new_subscription.user = user
+                new_subscription.forum = subscribed_item
+                new_subscription.type = 1 # not going to setup subscribing to all posts for now
+                new_subscription.save()
+        else:
+            if existing_subscription:
+                existing_subscription.delete()
+    else:
+        print("Unauthenticated user just tired to make a subscription.  They should never have been given this option.")
+    return HttpResponse(my_response)
 
 class HomeView(PaginatorMixin, ListView):
     paginate_by = defaults.PYBB_TOPIC_PAGE_SIZE
     #template_object_name = 'post_list'
     template_name = 'subscribed_items.html'
-
-    def subscription_response(self, subcribed_item, subscribe, **kwargs):
-        print("subscribe_response")
-        print("subscribe: ", subscribe)
-        # this is also in EngageView
-        my_response = ''
-        if self.request.user.is_authenticated:
-            if subscribe == "true":
-                if not (self.request.user in subcribed_item.subscribers.all()):
-                    # subscribe
-                    subcribed_item.subscribers.add(self.request.user)
-            else:
-                if self.request.user in subcribed_item.subscribers.all():
-                    # unsubscribe
-                    subcribed_item.subscribers.remove(self.request.user)
-        else:
-            print("Unauthenticated user just made a subscription.  They should never have been given this option.")
-            return HttpResponse(my_response)
-
 
     def post(self, request,  *args, **kwargs):
         print("HomeView POST!!!")
@@ -48,12 +69,12 @@ class HomeView(PaginatorMixin, ListView):
                 if post_action == "forum_subscription":
                     if 'forum_id' in post_items:
                         forum = Forum.objects.filter(id = request.POST['forum_id'])[0]
-                        my_response = self.subscription_response(forum, request.POST['subscribe'])
+                        my_response = forum_subscription_response(request.user, forum, request.POST['subscribe'])
                 elif post_action == "topic_subscription":
                     print("topic_subscription");
                     if 'topic_id' in post_items:
                         topic = Topic.objects.filter(id = request.POST['topic_id'])[0]
-                        my_response = self.subscription_response(topic, request.POST['subscribe'])
+                        my_response = topic_subscription_response(request.user, topic, request.POST['subscribe'])
                 else:
                     print("HomeView - unknown post_action: ", post_action);
 
@@ -65,9 +86,18 @@ class HomeView(PaginatorMixin, ListView):
         if self.request.user.is_authenticated:
             subscribed_topics = Topic.objects.filter(subscribers=self.request.user)
             posts_qs = Post.objects.filter(topic__in=subscribed_topics)
-            subscribed_forums = Forum.objects.filter(subscribers=self.request.user)
-            subscribed_claims = Claim.objects.filter(forum__in=subscribed_forums)
-            claimlinks_qs = ClaimLink.objects.filter(primary_claim__in=subscribed_claims)
+            forum_subscriptions = ForumSubscription.objects.filter(user=self.request.user)
+            if forum_subscriptions:
+                subscribed_forums = []
+                for forum_subscription in forum_subscriptions:
+                    subscribed_forums.append(forum_subscription.forum)
+                print("subscribed_forums: ", subscribed_forums)
+                subscribed_claims = Claim.objects.filter(forum__in=subscribed_forums)
+                print("subscribed_claims: ", subscribed_claims)
+                claimlinks_qs = ClaimLink.objects.filter(primary_claim__in=subscribed_claims)
+                print("claimlinks_qs: ", claimlinks_qs)
+            else:
+                claimlinks_qs = ClaimLink.objects.none()
         else:
             posts_qs = Post.objects.all()
             claimlinks_qs = ClaimLink.objects.all()

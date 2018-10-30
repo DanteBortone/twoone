@@ -36,8 +36,7 @@ ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'twoone.herokuapp.com']
 
 # Application definition
 
-INSTALLED_APPS = [
-                  'user.apps.UserConfig',
+INSTALLED_APPS = ['user.apps.UserConfig',
                   'create.apps.CreateConfig',
                   'engage.apps.EngageConfig',
                   'django.contrib.admin',
@@ -45,6 +44,7 @@ INSTALLED_APPS = [
                   'django.contrib.contenttypes',
                   'django.contrib.sessions',
                   'django.contrib.messages',
+                  'whitenoise.runserver_nostatic',
                   'django.contrib.staticfiles',
                   'pybb.apps.PybbConfig',
                   'django.contrib.sites', # added due to error after adding pybb:"RuntimeError: Model class django.contrib.sites.models.Site doesn't declare an explicit app_label and isn't in an application in INSTALLED_APPS."
@@ -52,7 +52,8 @@ INSTALLED_APPS = [
                   ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    # 'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -141,7 +142,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = '/static/'
 
 # pybb additions
 TEMPLATE_CONTEXT_PROCESSORS = ('pybb.context_processors.processor',)
@@ -152,7 +152,21 @@ PYBB_ALLOW_DELETE_OWN_POST = False
 PYBB_SMILES = {}
 PYBB_TOPIC_PAGE_SIZE = 10
 
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (
+                    os.path.join(BASE_DIR, 'static'),
+                    )
+
+# print("STATIC_ROOT: ", STATIC_ROOT)
+# print("STATICFILES_DIRS: ", STATICFILES_DIRS)
+
+# To add compression and caching support: http://whitenoise.evans.io/en/stable/django.html
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# to add compression but no caching:
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+
 
 django_heroku.settings(locals())
 
